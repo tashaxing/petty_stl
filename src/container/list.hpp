@@ -51,10 +51,26 @@ public:
 	//list(const list &other)
 	//{}
 
+	list(list &&other)
+	{
+		swap(other);
+	}
+
 	list &operator=(const list &other)
 	{
 		auto copy = other;
-		
+		swap(copy);
+		return *this;
+	}
+
+	list &operator=(const list &&other)
+	{
+		if (this != &other)
+		{
+			
+		}
+
+		return *this;
 	}
 
 	void swap(list &other) noexcept
@@ -63,6 +79,11 @@ public:
 		std::swap(_head, other._head);
 		std::swap(_tail, other._tail);
 		std::swap(_size, other._size);
+	}
+
+	void clear() noexcept
+	{
+		
 	}
 
 private:
