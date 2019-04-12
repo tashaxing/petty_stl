@@ -1,2 +1,2 @@
 # petty_stl
-A little stl implementation in C++11 like a pet
+A little stl implementation in C++ like a pet
