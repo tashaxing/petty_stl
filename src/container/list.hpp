@@ -12,20 +12,20 @@ class list
 private:
 	struct link_node
 	{
-		explicit link_node(const T &value) : _value(value), _pre(nullptr), _next(nullptr)
+        explicit link_node(const T &value) : _value(value), _pre(NULL), _next(NULL)
 		{}
 
-		link_node(const T &value, link_node *pre, link_node *&&next)
-			: _value(value), _pre(pre), _next(std::move(next))
-		{}
+//		link_node(const T &value, link_node *pre, link_node *&&next)
+//			: _value(value), _pre(pre), _next(std::move(next))
+//		{}
 
-		link_node(const T &&value, link_node *pre, link_node *&&next)
-			: _value(std::move(value)), _pre(pre), _next(std::move(next))
-		{}
+//		link_node(const T &&value, link_node *pre, link_node *&&next)
+//			: _value(std::move(value)), _pre(pre), _next(std::move(next))
+//		{}
 
 		// customize default constructors
-		link_node(link_node &&) = default;
-		link_node &operator=(link_node &&) = default;
+//		link_node(link_node &&) = default;
+//		link_node &operator=(link_node &&) = default;
 
 		// disable some constructors
 		link_node(const link_node &) = delete;
@@ -51,29 +51,25 @@ public:
 	//list(const list &other)
 	//{}
 
-	list(list &&other)
-	{
-		swap(other);
-	}
+//	list(list &&other)
+//	{
+//		swap(other);
+//	}
 
 	list &operator=(const list &other)
 	{
-		auto copy = other;
-		swap(copy);
-		return *this;
-	}
-
-	list &operator=(const list &&other)
-	{
-		if (this != &other)
-		{
-			
-		}
 
 		return *this;
 	}
 
-	void swap(list &other) noexcept
+//	list &operator=(const list &&other)
+//	{
+
+
+//		return *this;
+//	}
+
+    void swap(list &other)
 	{
 		// use std swap to do detail operation
 		std::swap(_head, other._head);
@@ -81,13 +77,13 @@ public:
 		std::swap(_size, other._size);
 	}
 
-	void clear() noexcept
+    void clear()
 	{
 		
 	}
 
 private:
-	std::unique_ptr<link_node> _head;
+    link_node *_head;
 	link_node *_tail;
 	size_t _size;
 };

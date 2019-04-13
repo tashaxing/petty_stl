@@ -1,6 +1,7 @@
 #ifndef _VECTOR_H_
 #define _VECTOR_H_
 
+#include <memory>
 #include "../iterator/iterator.hpp"
 #include "../algorithm/algorithm.hpp"
 
@@ -12,7 +13,7 @@ class vector
 {
 public:
 	// constructor and destructor related
-	vector(): _first(NULL), _last(NULL), _end(NULL)
+    vector(): _first(NULL), _last(NULL), _terminate(NULL)
 	{}
 	
 	explicit vector(size_t n)
@@ -36,16 +37,17 @@ public:
 		copy_elements(other._first, other._last);
 	}
 
-	vector(vector &&other)
-	{
-		_first = other._first;
-		_last = other._last;
-		_terminate = other._terminate;
+    // rvalue constructor enabled only above C++11
+//	vector(vector &&other)
+//	{
+//		_first = other._first;
+//		_last = other._last;
+//		_terminate = other._terminate;
 
-		other._first = NULL;
-		other._last = NULL;
-		other._terminate = NULL;
-	}
+//		other._first = NULL;
+//		other._last = NULL;
+//		other._terminate = NULL;
+//	}
 
 	vector &operator=(const vector &other)
 	{
@@ -55,23 +57,23 @@ public:
 		return *this;
 	}
 
-	vector &operator=(vector &&other)
-	{
-		if (this != &other)
-		{
-			destroy();
+//    vector &operator=(vector &&other)
+//    {
+//        if (this != &other)
+//        {
+//            destroy();
 
-			_first = other._first;
-			_last = other._last;
-			_terminate = other._terminate;
+//            _first = other._first;
+//            _last = other._last;
+//            _terminate = other._terminate;
 
-			other._first = NULL;
-			other._last = NULL;
-			other._terminate = NULL;
-		}
+//            other._first = NULL;
+//            other._last = NULL;
+//            other._terminate = NULL;
+//        }
 
-		return *this;
-	}
+//        return *this;
+//    }
 
 	~vector()
 	{
@@ -172,7 +174,7 @@ public:
 		return *(begin() + i);
 	}
 
-	const T &operator[](const size_t) const
+    const T &operator[](const size_t i) const
 	{
 		return *(cbegin() + i);
 	}
