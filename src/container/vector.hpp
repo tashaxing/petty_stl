@@ -165,7 +165,7 @@ public:
 
 	void shrink_to_fit()
 	{
-
+		// TODO:
 	}
 
 	// element access related
@@ -236,17 +236,24 @@ public:
 	{
 		size_t tail_len = end() - last;
 		size_t remove_len = last - first;
-
 		_last = _last - remove_len;
 
-		return NULL;
+		while (remove_len > 0)
+		{
+			// shift elements 
+			T *temp = last - remove_len;
+			*temp = *(last++);
+			--remove_len;
+		}
+
+		return first;
 	}
 
 private:
 	// init elements after the container cleared
 	void init_elements(size_t n, const T &value)
 	{
-		
+		size_t = new_capacity = 
 	}
 
 	template<class InputIterator>
@@ -258,6 +265,12 @@ private:
 	void destroy()
 	{
 
+	}
+
+	size_t new_capacity(size_t len) const
+	{
+		size_ty = _terminate - _first;
+		new_len = 
 	}
 
 private:
