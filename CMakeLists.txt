@@ -11,6 +11,7 @@ file(GLOB SOURCES
     src/container/*.*
 	src/iterator/*.*
 	src/algorithm/*.*
+	src/utility/*.*
     src/*.*
 )
 

@@ -1,7 +1,7 @@
 #ifndef _VECTOR_H_
 #define _VECTOR_H_
 
-#include <memory>
+#include "../utility/allocator.hpp"
 #include "../iterator/iterator.hpp"
 #include "../algorithm/algorithm.hpp"
 
@@ -18,77 +18,98 @@ public:
 	
 	explicit vector(size_t n)
 	{
-		init_elements(n, T());
+		allocate_and_fill(n, T());
 	}
 
-	vector(size_t n, const T &value)
+	vector(size_t n, const T &val)
 	{
-		init_elements(n, value);
+		allocate_and_fill(n, val);
+	}
+
+	vector(std::initializer_list<T> vals)
+		: vector(vals.begin(), vals.end())
+	{
 	}
 
 	template<class InputIterator>
 	vector(InputIterator first, InputIterator last)
 	{
-		// TODO:
+		allocate_and_copy(first, last);
 	}
 
 	vector(const vector &other)
 	{
-		copy_elements(other._first, other._last);
+		allocate_and_copy(other._first, other._last);
 	}
 
-    // rvalue constructor enabled only above C++11
-//	vector(vector &&other)
-//	{
-//		_first = other._first;
-//		_last = other._last;
-//		_terminate = other._terminate;
+    // rvalue copy constructor enabled only above C++11
+	vector(vector &&other)
+	{
+		_first = other._first;
+		_last = other._last;
+		_terminate = other._terminate;
 
-//		other._first = NULL;
-//		other._last = NULL;
-//		other._terminate = NULL;
-//	}
+		other._first = NULL;
+		other._last = NULL;
+		other._terminate = NULL;
+	}
 
 	vector &operator=(const vector &other)
 	{
 		if (this != &other)
-			copy_elements(other._first, other._last);
+			allocate_and_copy(other._first, other._last);
 		
 		return *this;
 	}
 
-//    vector &operator=(vector &&other)
-//    {
-//        if (this != &other)
-//        {
-//            destroy();
+	// rvalue asign constructor enabled only above C++11
+    vector &operator=(vector &&other)
+    {
+        if (this != &other)
+        {
+			// free first
+			destroy_all();
 
-//            _first = other._first;
-//            _last = other._last;
-//            _terminate = other._terminate;
+            _first = other._first;
+            _last = other._last;
+            _terminate = other._terminate;
 
-//            other._first = NULL;
-//            other._last = NULL;
-//            other._terminate = NULL;
-//        }
+            other._first = NULL;
+            other._last = NULL;
+            other._terminate = NULL;
+        }
 
-//        return *this;
-//    }
+        return *this;
+    }
 
 	~vector()
 	{
-		destroy();
+		destroy_all();
 	}
 
 	// compare related
 	bool operator==(const vector &other) const
 	{
+		if (size() != other.size())
+			return false;
+
+		T *p1 = _first;
+		T *p2 = other._first;
+		while (p1 != _last && p2 != other._last)
+		{
+			if (*p1 != *p2)
+				return false;
+
+			++p1;
+			++p2;
+		}
+
 		return true;
 	}
 
 	bool operator!=(const vector &other) const
 	{
-		return true;
+		return !(*this == other);
 	}
 
 	// iterator related (pointer as iterator)
@@ -136,16 +157,26 @@ public:
 		// TODO:
 		if (n < size())
 		{
-			
+			petty_stl::allocator::destroy(_first + n, _last);
+			_last = _first + n;
 		}
 		else if (n > size() && n <= capacity())
 		{
-
+			size_t insert_len = n - size();
+			_last = std::uninitialized_fill_n(_last, insert_len, val);
 		}
 		else if (n > capacity())
 		{
+			// copy to another space
 			size_t insert_len = n - size();
+			T *new_start = petty_stl::allocator::allocate(new_capacity(insert_len));
+			T *new_end = std::uninitialized_copy(begin(), end(), new_start);
+			new_end = std::uninitialized_fill_n(new_end, insert_len, val);
 
+			destroy_all();
+			_first = new_start;
+			_last = new_end;
+			_terminate = _first + n;
 		}
 	}
 
@@ -154,9 +185,9 @@ public:
 		if (n <= capacity())
 			return;
 
-		T *new_first = _allocator.allocate(n);
+		T *new_first = petty_stl::allocator::allocate(n);
 		T *new_last = std::uninitialized_copy(begin(), end(), new_first);
-		destroy();
+		destroy_all();
 
 		_first = new_first;
 		_last = new_last;
@@ -165,7 +196,11 @@ public:
 
 	void shrink_to_fit()
 	{
-		// TODO:
+		T *p = (T *)petty_stl::allocator::allocate(size());
+		_last = std::uninitialized_copy(_first, _last, p);
+		petty_stl::allocator::deallocate(_first, capacity());
+		_first = p;
+		_terminate = _last;
 	}
 
 	// element access related
@@ -192,22 +227,29 @@ public:
 	// modify related
 	void clear()
 	{
-
+		petty_stl::allocator::destroy(_first, _last);
+		_last = _first;
 	}
 
 	void swap(vector &other)
 	{
-
+		if (this != &other)
+		{
+			std::swap(_first, other._first);
+			std::swap(_last, other._last);
+			std::swap(_terminate, other._terminate);
+		}
 	}
 
 	void push_back(const T &val)
 	{
-
+		
 	}
 
 	void pop_back()
 	{
-
+		--_last;
+		petty_stl::allocator::destroy(_last);
 	}
 
 	// pointer as iterator
@@ -218,7 +260,15 @@ public:
 	
 	void insert(T *position, const size_t n, const T &val)
 	{
-		
+		size_t extra_len = _terminate - _last;
+		size_t need_len = n;
+
+		if (extra_len >= need_len)
+		{
+
+		}
+		else
+
 	}
 
 	template<class InputIterator>
@@ -251,26 +301,40 @@ public:
 
 private:
 	// init elements after the container cleared
-	void init_elements(size_t n, const T &value)
+	void allocate_and_fill(size_t n, const T &val)
 	{
-		size_t = new_capacity = 
+		_first = petty_stl::allocator::allocate(n);
+		std::uninitialized_fill_n(_first, n, val);
+		_last = _first + n;
+		_terminate = _last; // FIXME: expand?
 	}
 
 	template<class InputIterator>
-	void copy_elements(InputIterator first, InputIterator last)
+	void allocate_and_copy(InputIterator first, InputIterator last)
 	{
-		
+		_first = petty_stl::allocator::allocate(last - first);
+		_last = std::uninitialized_copy(_first, last, _last);
+		_terminate = _last; // FIXME: expand?
 	}
 
-	void destroy()
+	void destroy_all()
 	{
-
+		if (capacity() != 0)
+		{
+			// destruct before free space
+			petty_stl::allocator::destroy(_first, _last);
+			petty_stl::allocator::deallocate(_first, capacity);
+		}
 	}
 
 	size_t new_capacity(size_t len) const
 	{
-		size_ty = _terminate - _first;
-		new_len = 
+		// FIXME: expand pace actually is double
+		size_t old_capcacity = _terminate - _first;
+		size_t new_len = petty_stl::max(old_capcacity, len); // expand step len
+		size_t new_capacity = old_capcacity > 0 ? old_capcacity + new_len : len;
+		
+		return new_capacity;
 	}
 
 private:
@@ -279,9 +343,6 @@ private:
 	T *_terminate; // the one past end of the allocated space pointer
 	std::allocator<T> _allocator;
 
-private:
-	// const variables
-	
 	
 }; 
 

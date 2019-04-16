@@ -31,7 +31,7 @@ namespace petty_stl
 
 	// find
 	template<class InputIterator, typename T>
-	InputIterator find(InputIterator first, InputIterator last, cosnt T &val)
+	InputIterator find(InputIterator first, InputIterator last, const T &val)
 	{
 		while (first != last)
 		{
@@ -69,6 +69,6 @@ namespace petty_stl
 
 	// sort
 
-}
+} // namespace petty_stl
 
 #endif
