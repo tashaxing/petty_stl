@@ -243,7 +243,7 @@ public:
 
 	void push_back(const T &val)
 	{
-		
+		insert(end(), val);
 	}
 
 	void pop_back()
@@ -255,26 +255,59 @@ public:
 	// pointer as iterator
 	T *insert(T *position, const T &val)
 	{
-		return NULL;
+		size_t offset = position - begin();
+		insert(position, 1, val);
+		return begin() + offset;
 	}
 	
 	void insert(T *position, const size_t n, const T &val)
 	{
-		size_t extra_len = _terminate - _last;
+		size_t spare_len = _terminate - _last;
 		size_t need_len = n;
 
-		if (extra_len >= need_len)
+		if (spare_len >= need_len)
 		{
-
+			T *p = end() - 1;
+			// shift the elements to the for n space
+			while (p - position() >= 0)
+			{
+				petty_stl::allocator::construct(p + need_len, *p);
+				--p;
+			}
+			// fill in n elements
+			std::uninitialized_fill_n(position, n, val);
+			_last += need_len;
 		}
 		else
-
+			reallocate_and_fill(position, n, val);
 	}
 
 	template<class InputIterator>
 	void insert(T *position, InputIterator first, InputIterator last)
 	{
+		size_t spare_len = _terminate - _last;
+		size_t need_len = last - first;
 
+		if (spare_len >= need_len)
+		{
+			// these two scenarios are complex, need a picture to illustrate the logic
+			if (_last - position > need_len)
+			{
+				std::uninitialized_copy(_last - need_len, _last, _last);
+				std::copy_backward(position, _last - need_len, _last);
+				std::copy(first, last, position);
+			}
+			else
+			{
+				// when to use copy or uninitialized_copy?
+				T *p = std::uninitialized_copy(first + _last - position, last, _last);
+				std::uninitialized_copy(position, _last, p);
+				std::copy(first, first + _last - position, position); 
+			}
+			_last += need_len;
+		}
+		else
+			reallocate_and_copy(position, first, last);
 	}
 
 	T *erase(T *position)
@@ -306,7 +339,25 @@ private:
 		_first = petty_stl::allocator::allocate(n);
 		std::uninitialized_fill_n(_first, n, val);
 		_last = _first + n;
-		_terminate = _last; // FIXME: expand?
+		_terminate = _last; // FIXME: extra space?
+	}
+
+	void reallocate_and_fill(T *position, size_t n, const T &val)
+	{
+		size_t new_capacity_len = new_capacity(n);
+		T *new_first = petty_stl::allocator::allocate(new_capacity_len);
+		T *new_terminate = new_first + new_capacity_len;
+
+		// copy the former part, insert the middle part, shift the tail part
+		T *new_last = std::uninitialized_copy(begin(), position, new_first);
+		new_last = std::uninitialized_fill_n(new_last, n, val);
+		new_last = std::uninitialized_copy(position, end(), new_last);
+
+		// destroy old vector
+		destroy_all();
+		_first = new_first;
+		_last = new_last;
+		_terminate = new_terminate;
 	}
 
 	template<class InputIterator>
@@ -314,7 +365,26 @@ private:
 	{
 		_first = petty_stl::allocator::allocate(last - first);
 		_last = std::uninitialized_copy(_first, last, _last);
-		_terminate = _last; // FIXME: expand?
+		_terminate = _last; // FIXME: extra space?
+	}
+
+	template<class InputIterator>
+	void reallocate_and_copy(T *position, InputIterator first, InputIterator last)
+	{
+		size_t new_capacity_len = new_capacity(last - first);
+		T *new_first = petty_stl::allocator::allocate(new_capacity_len);
+		T *new_terminate = new_first + new_capacity_len;
+
+		// copy the former part, insert the middle part, shift the tail part
+		T *new_last = std::uninitialized_copy(begin(), position, new_first);
+		new_last = std::uninitialized_copy(first, last, new_last);
+		new_last = std::uninitialized_copy(position, end(), new_last);
+
+		// destroy old vector
+		destroy_all();
+		_first = new_first;
+		_last = new_last;
+		_terminate = new_terminate;
 	}
 
 	void destroy_all()
@@ -341,9 +411,6 @@ private:
 	T *_first; // the first element pointer
 	T *_last; // the first free space pointer
 	T *_terminate; // the one past end of the allocated space pointer
-	std::allocator<T> _allocator;
-
-	
 }; 
 
 
