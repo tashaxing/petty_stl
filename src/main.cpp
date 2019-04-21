@@ -7,8 +7,10 @@ int main(int argc, char *argv[])
 	std::cout << "welcome" << std::endl;
 
 	petty_stl::vector<int> vec;
-	vec.reserve(10);
-	//vec.push_back(2);
+	vec.reserve(15);
+	std::cout << vec.size() << std::endl;
+	std::cout << vec.capacity() << std::endl;
+	vec.push_back(2);
 	//vec.push_back(3);
 	//vec.push_back(4);
 	//vec.push_back(7);
@@ -17,6 +19,7 @@ int main(int argc, char *argv[])
 	//	std::cout << vec[i] << ' ';
 	//std::cout << std::endl;
 
+	getchar();
 
 	return 0;
 }

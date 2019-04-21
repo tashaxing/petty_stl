@@ -57,7 +57,7 @@ void allocator<T>::construct(T *ptr)
 template<typename T>
 void allocator<T>::construct(T *ptr, const T &val)
 {
-	new(ptr)T(value);
+	new(ptr)T(val);
 }
 
 template<typename T>

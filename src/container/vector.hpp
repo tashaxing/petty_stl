@@ -185,7 +185,7 @@ public:
 		if (n <= capacity())
 			return;
 
-		T *new_first = petty_stl::allocator::allocate(n);
+		T *new_first = petty_stl::allocator<T>::allocate(n);
 		T *new_last = std::uninitialized_copy(begin(), end(), new_first);
 		destroy_all();
 
@@ -269,9 +269,9 @@ public:
 		{
 			T *p = end() - 1;
 			// shift the elements to the for n space
-			while (p - position() >= 0)
+			while (p - position >= 0)
 			{
-				petty_stl::allocator::construct(p + need_len, *p);
+				petty_stl::allocator<T>::construct(p + need_len, *p);
 				--p;
 			}
 			// fill in n elements
@@ -282,8 +282,8 @@ public:
 			reallocate_and_fill(position, n, val);
 	}
 
-	template<class InputIterator>
-	void insert(T *position, InputIterator first, InputIterator last)
+	//template<class InputIterator>
+	void insert(T *position, T* first, T* last)
 	{
 		size_t spare_len = _terminate - _last;
 		size_t need_len = last - first;
@@ -345,7 +345,7 @@ private:
 	void reallocate_and_fill(T *position, size_t n, const T &val)
 	{
 		size_t new_capacity_len = new_capacity(n);
-		T *new_first = petty_stl::allocator::allocate(new_capacity_len);
+		T *new_first = petty_stl::allocator<T>::allocate(new_capacity_len);
 		T *new_terminate = new_first + new_capacity_len;
 
 		// copy the former part, insert the middle part, shift the tail part
@@ -392,8 +392,8 @@ private:
 		if (capacity() != 0)
 		{
 			// destruct before free space
-			petty_stl::allocator::destroy(_first, _last);
-			petty_stl::allocator::deallocate(_first, capacity);
+			petty_stl::allocator<T>::destroy(_first, _last);
+			petty_stl::allocator<T>::deallocate(_first, capacity());
 		}
 	}
 
