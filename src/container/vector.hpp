@@ -12,6 +12,8 @@ template<typename T>
 class vector
 {
 public:
+	typedef T* iterator;
+public:
 	// constructor and destructor related
     vector(): _first(NULL), _last(NULL), _terminate(NULL)
 	{}
@@ -154,7 +156,6 @@ public:
 
 	void resize(size_t n, T val = T())
 	{
-		// TODO:
 		if (n < size())
 		{
 			petty_stl::allocator::destroy(_first + n, _last);
@@ -249,7 +250,7 @@ public:
 	void pop_back()
 	{
 		--_last;
-		petty_stl::allocator::destroy(_last);
+		petty_stl::allocator<T>::destroy(_last);
 	}
 
 	// pointer as iterator
