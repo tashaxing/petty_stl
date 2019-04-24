@@ -4,7 +4,7 @@ project(petty_stl)
 
 # check if support C++11, and define macro to enable some features
 
-#include_directories(
+#include_directories( 
 #)
 
 file(GLOB SOURCES

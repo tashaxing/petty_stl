@@ -9,6 +9,8 @@ namespace petty_stl
 template<typename T>
 class list
 {
+public:
+	typedef T* iterator;
 private:
 	struct link_node
 	{
