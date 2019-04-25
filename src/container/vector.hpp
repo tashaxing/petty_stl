@@ -158,7 +158,7 @@ public:
 	{
 		if (n < size())
 		{
-			petty_stl::allocator::destroy(_first + n, _last);
+			petty_stl::allocator<T>::destroy(_first + n, _last);
 			_last = _first + n;
 		}
 		else if (n > size() && n <= capacity())
@@ -170,7 +170,7 @@ public:
 		{
 			// copy to another space
 			size_t insert_len = n - size();
-			T *new_start = petty_stl::allocator::allocate(new_capacity(insert_len));
+			T *new_start = petty_stl::allocator<T>::allocate(new_capacity(insert_len));
 			T *new_end = std::uninitialized_copy(begin(), end(), new_start);
 			new_end = std::uninitialized_fill_n(new_end, insert_len, val);
 
@@ -197,9 +197,9 @@ public:
 
 	void shrink_to_fit()
 	{
-		T *p = (T *)petty_stl::allocator::allocate(size());
+		T *p = (T *)petty_stl::allocator<T>::allocate(size());
 		_last = std::uninitialized_copy(_first, _last, p);
-		petty_stl::allocator::deallocate(_first, capacity());
+		petty_stl::allocator<T>::deallocate(_first, capacity());
 		_first = p;
 		_terminate = _last;
 	}
@@ -228,7 +228,7 @@ public:
 	// modify related
 	void clear()
 	{
-		petty_stl::allocator::destroy(_first, _last);
+		petty_stl::allocator<T>::destroy(_first, _last);
 		_last = _first;
 	}
 
@@ -337,7 +337,7 @@ private:
 	// init elements after the container cleared
 	void allocate_and_fill(size_t n, const T &val)
 	{
-		_first = petty_stl::allocator::allocate(n);
+		_first = petty_stl::allocator<T>::allocate(n);
 		std::uninitialized_fill_n(_first, n, val);
 		_last = _first + n;
 		_terminate = _last; // FIXME: extra space?
@@ -364,7 +364,7 @@ private:
 	template<class InputIterator>
 	void allocate_and_copy(InputIterator first, InputIterator last)
 	{
-		_first = petty_stl::allocator::allocate(last - first);
+		_first = petty_stl::allocator<T>::allocate(last - first);
 		_last = std::uninitialized_copy(_first, last, _last);
 		_terminate = _last; // FIXME: extra space?
 	}
@@ -373,7 +373,7 @@ private:
 	void reallocate_and_copy(T *position, InputIterator first, InputIterator last)
 	{
 		size_t new_capacity_len = new_capacity(last - first);
-		T *new_first = petty_stl::allocator::allocate(new_capacity_len);
+		T *new_first = petty_stl::allocator<T>::allocate(new_capacity_len);
 		T *new_terminate = new_first + new_capacity_len;
 
 		// copy the former part, insert the middle part, shift the tail part
