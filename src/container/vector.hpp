@@ -365,7 +365,7 @@ private:
 	void allocate_and_copy(InputIterator first, InputIterator last)
 	{
 		_first = petty_stl::allocator<T>::allocate(last - first);
-		_last = std::uninitialized_copy(_first, last, _last);
+		_last = std::uninitialized_copy(_first, last, _first);
 		_terminate = _last; // FIXME: extra space?
 	}
 
