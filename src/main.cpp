@@ -60,8 +60,9 @@ int main(int argc, char *argv[])
 	// ---- test stack ---- //
 	petty_stl::stack<int> my_stack;
 	std::cout << (my_stack.empty() ? "empty" : "not empty") << std::endl;
+	//std::cout << my_stack.size() << std::endl;
 
-	my_stack.push(11);
+	/*my_stack.push(11);
 	my_stack.push(12);
 	my_stack.push(13);
 	my_stack.push(14);
@@ -74,7 +75,7 @@ int main(int argc, char *argv[])
 		std::cout << top << ' ';
 		my_stack.pop();
 	}
-	std::cout << std::endl;
+	std::cout << std::endl;*/
 
 
 	getchar();
