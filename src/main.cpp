@@ -4,8 +4,8 @@
 #include "container/stack.hpp"
 #include "container/list.hpp"
 #include <stack>
-int main(int argc, char *argv[])
-{
+int main(int argc, char* argv[])
+{	
 	std::cout << "welcome" << std::endl;
 
 	// ---- test vector ---- //
@@ -62,21 +62,25 @@ int main(int argc, char *argv[])
 	std::cout << (my_stack.empty() ? "empty" : "not empty") << std::endl;
 	std::cout << my_stack.size() << std::endl;
 
-	//my_stack.push(11);
-	//my_stack.push(12);
-	//my_stack.push(13);
-	//my_stack.push(14);
+	my_stack.push(11);
+	my_stack.push(12);
+	my_stack.push(13);
+	my_stack.push(14);
+	std::cout << my_stack.size() << std::endl;
 
-	//std::cout << (my_stack.empty() ? "empty" : "not empty") << std::endl;
+	my_stack.pop();
+	std::cout << (my_stack.empty() ? "empty" : "not empty") << std::endl;
+	std::cout << my_stack.size() << std::endl;
 
-	//while (!my_stack.empty())
-	//{
-	//	int top = my_stack.top();
-	//	std::cout << top << ' ';
-	//	my_stack.pop();
-	//}
-	//std::cout << std::endl;
-
+	while (!my_stack.empty())
+	{
+		//int top = my_stack.top();
+		//std::cout << top << ' ';
+		my_stack.pop();
+	}
+	std::cout << std::endl;
+	std::cout << (my_stack.empty() ? "empty" : "not empty") << std::endl;
+	std::cout << my_stack.size() << std::endl;
 
 	getchar();
 

@@ -11,7 +11,7 @@ template<typename T, class Container = petty_stl::vector<T>>
 class stack
 {
 public:
-	explicit stack(const Container &container = Container()): _container(container)
+	explicit stack(const Container& container = Container()): _container(container)
 	{}
 
 	// basic opertion
@@ -25,12 +25,12 @@ public:
 		return _container.size();
 	}
 
-	const T &top() const
+	const T& top() const
 	{
 		return _container.back();
 	}
 
-	void push(const T &val)
+	void push(const T& val)
 	{
 		_container.push_back(val);
 	}
@@ -40,7 +40,7 @@ public:
 		_container.pop_back();
 	}
 
-	void swap(stack &other)
+	void swap(stack& other)
 	{
 		std::swap(_container, other._container);
 	}
@@ -48,19 +48,19 @@ public:
 public:
 	// operator
 	template<typename T, class Container>
-	friend bool operator==(const stack<T, Container> &lhs, const stack<T, Container> &rhs)
+	friend bool operator==(const stack<T, Container>& lhs, const stack<T, Container>& rhs)
 	{
 		return lhs._container == rhs._container;
 	}
 
 	template<typename T, class Container>
-	friend bool operator!=(const stack<T, Container> &lhs, const stack<T, Container> &rhs)
+	friend bool operator!=(const stack<T, Container>& lhs, const stack<T, Container>& rhs)
 	{
 		return lhs._container != rhs._container;
 	}
 
 	template<typename T, class Container>
-	void swap(stack<T, Container> &x, stack<T, Container> &y)
+	void swap(stack<T, Container>& x, stack<T, Container>& y)
 	{
 		x.swap(y);
 	}
