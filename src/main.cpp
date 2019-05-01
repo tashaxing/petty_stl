@@ -57,6 +57,10 @@ int main(int argc, char* argv[])
 	//vec.clear();
 	//std::cout << (vec.empty() ? "empty" : "not empty") << std::endl;
 
+	// ---- test list ---- //
+
+	// ---- test queue ---- //
+
 	// ---- test stack ---- //
 	petty_stl::stack<int> my_stack;
 	std::cout << (my_stack.empty() ? "empty" : "not empty") << std::endl;
@@ -74,8 +78,8 @@ int main(int argc, char* argv[])
 
 	while (!my_stack.empty())
 	{
-		//int top = my_stack.top();
-		//std::cout << top << ' ';
+		int top = my_stack.top();
+		std::cout << top << ' ';
 		my_stack.pop();
 	}
 	std::cout << std::endl;

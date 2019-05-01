@@ -25,7 +25,7 @@ public:
 		return _container.size();
 	}
 
-	const T& top() const
+	T& top()
 	{
 		return _container.back();
 	}
