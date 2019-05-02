@@ -322,12 +322,12 @@ public:
 		size_t remove_len = last - first;
 		_last = _last - remove_len;
 
-		while (remove_len > 0)
+		while (tail_len > 0)
 		{
 			// shift elements 
 			T* temp = last - remove_len;
 			*temp = *(last++);
-			--remove_len;
+			--tail_len;
 		}
 
 		return first;

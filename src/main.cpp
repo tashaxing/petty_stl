@@ -4,28 +4,29 @@
 #include "container/stack.hpp"
 #include "container/list.hpp"
 #include <stack>
+
 int main(int argc, char* argv[])
 {	
 	std::cout << "welcome" << std::endl;
 
 	// ---- test vector ---- //
-	//petty_stl::vector<int> vec;
-	//vec.reserve(15);
-	//std::cout << vec.size() << std::endl;
-	//std::cout << vec.capacity() << std::endl;
+	petty_stl::vector<int> vec;
+	vec.reserve(15);
+	std::cout << vec.size() << std::endl;
+	std::cout << vec.capacity() << std::endl;
 
-	//std::cout << (vec.empty() ? "empty" : "not empty") << std::endl;
-	//
-	//vec.push_back(2);
-	//vec.push_back(3);
-	//vec.push_back(4);
-	//vec.push_back(7);
-	//for (int i = 0; i < vec.size(); i++)
-	//	std::cout << vec[i] << ' ';
-	//std::cout << std::endl;
+	std::cout << (vec.empty() ? "empty" : "not empty") << std::endl;
+	
+	vec.push_back(2);
+	vec.push_back(3);
+	vec.push_back(4);
+	vec.push_back(7);
+	for (int i = 0; i < vec.size(); i++)
+		std::cout << vec[i] << ' ';
+	std::cout << std::endl;
 
-	//std::cout << vec.front() << std::endl;
-	//std::cout << vec.back() << std::endl;
+	std::cout << vec.front() << std::endl;
+	std::cout << vec.back() << std::endl;
 
 	//vec.pop_back();
 	//for (int i = 0; i < vec.size(); i++)
@@ -47,10 +48,10 @@ int main(int argc, char* argv[])
 	//petty_stl::vector<int>::iterator pos = petty_stl::find(vec.begin(), vec.end(), 9);
 	//std::cout << "find 9 position: " << pos - vec.begin() << std::endl;
 
-	//vec.erase(vec.begin() + 1);
-	//for (int i = 0; i < vec.size(); i++)
-	//	std::cout << vec[i] << ' ';
-	//std::cout << std::endl;
+	/*vec.erase(vec.begin() + 1);
+	for (int i = 0; i < vec.size(); i++)
+		std::cout << vec[i] << ' ';
+	std::cout << std::endl;*/
 
 	//std::cout << (vec.empty() ? "empty" : "not empty") << std::endl;
 
@@ -59,10 +60,11 @@ int main(int argc, char* argv[])
 
 	// ---- test list ---- //
 
+
 	// ---- test queue ---- //
 
 	// ---- test stack ---- //
-	petty_stl::stack<int> my_stack;
+	/*petty_stl::stack<int> my_stack;
 	std::cout << (my_stack.empty() ? "empty" : "not empty") << std::endl;
 	std::cout << my_stack.size() << std::endl;
 
@@ -84,7 +86,7 @@ int main(int argc, char* argv[])
 	}
 	std::cout << std::endl;
 	std::cout << (my_stack.empty() ? "empty" : "not empty") << std::endl;
-	std::cout << my_stack.size() << std::endl;
+	std::cout << my_stack.size() << std::endl;*/
 
 	getchar();
 
