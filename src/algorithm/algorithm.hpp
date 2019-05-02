@@ -69,6 +69,9 @@ namespace petty_stl
 
 	// sort
 
+	// unique
+
+	// reverse
 } // namespace petty_stl
 
 #endif

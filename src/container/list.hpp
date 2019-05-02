@@ -9,16 +9,15 @@ namespace petty_stl
 template<typename T>
 class list
 {
-public:
-	typedef T* iterator;
 private:
 	struct link_node
 	{
-        explicit link_node(const T& value) : _value(value), _pre(NULL), _next(NULL)
+	public:
+        explicit link_node(const T& val) : value(val), pre(NULL), next(NULL)
 		{}
 
-//		link_node(const T& value, link_node* pre, link_node*&& next)
-//			: _value(value), _pre(pre), _next(std::move(next))
+//		link_node(const T& val, link_node* pre, link_node*&& next)
+//			: value(value), _pre(pre), _next(std::move(next))
 //		{}
 
 //		link_node(const T&& value, link_node* pre, link_node*&& next)
@@ -29,29 +28,62 @@ private:
 //		link_node(link_node&&) = default;
 //		link_node& operator=(link_node&&) = default;
 
-		// disable some constructors
-		link_node(const link_node& ) = delete;
-		link_node& operator=(const link_node&) = delete;
+		T value;
+		T* pre;
+		T* next;
 
-		T _value;
-		T* _pre;
-		T* _next;
+	private:
+		// disable some constructors
+		link_node(const link_node&);
+		link_node& operator=(const link_node&);	
 	};
 
 public:
+	struct iterator
+	{
+	public:
+		iterator()
+		{
+
+		}
+
+		T& operator*() const
+		{
+			return _ptr->value;
+		}
+
+		T* operator->() const
+		{
+			return &(operator*());
+		}
+
+		iterator operator--(size_t)
+		{
+			return NULL;
+		}
+
+	protected:
+		link_node* _ptr;
+	};
+
+public:
+	// constructor and destructor related
 	list()
 	{
 
 	}
 
-	explicit list(size_t n)
+	explicit list(size_t n, const T& val = T())
 	{}
 
-	list(size_t n, const T& value)
-	{}
+	template <class InputIterator>
+	list(InputIterator first, InputIterator last)
+	{
 
-	//list(const list& other)
-	//{}
+	}
+
+	list(const list& other)
+	{}
 
 //	list(list&& other)
 //	{
@@ -71,7 +103,104 @@ public:
 //		return *this;
 //	}
 
-    void swap(list& other)
+	~list()
+	{
+		clear();
+
+	}
+
+	// compare related
+	bool emtpy() const
+	{
+		return _head == _tail;
+	}
+
+	size_t size() const
+	{
+		// TODO:
+		return 0; 
+	}
+
+	// operation
+	T& front()
+	{
+		return _head->value;
+	}
+
+	T& back()
+	{
+		return _tail->pre->value;
+	}
+
+	void push_front(const T& val)
+	{
+
+	}
+
+	void pop_front()
+	{
+
+	}
+
+	void push_back(const T& val)
+	{
+
+	}
+
+	void pop_back()
+	{
+
+	}
+
+	link_node* begin()
+	{
+		return NULL;
+	}
+
+	link_node* end()
+	{
+		return NULL;
+	}
+
+	const link_node* cbegin() const
+	{
+		return NULL;
+	}
+
+	const link_node* cend() const
+	{
+		return NULL;
+	}
+
+	// rbegin, rend
+
+	link_node* insert(link_node* position, const T& val)
+	{
+		return NULL;
+	}
+
+	void insert(link_node* position, size_t n, const T& val)
+	{
+
+	}
+
+	template <class InputIterator>
+	void insert(link_node* position, InputIterator first, InputIterator last)
+	{
+
+	}
+
+	link_node* erase(link_node* position)
+	{
+		return NULL;
+	}
+
+	link_node* erase(link_node* first, link_node* last)
+	{
+
+	}
+
+	void swap(list& other)
 	{
 		// use std swap to do detail operation
 		std::swap(_head, other._head);
@@ -84,10 +213,69 @@ public:
 		
 	}
 
+	void splice(link_node* position, list& other)
+	{
+
+	}
+
+	void splice(link_node* position, list& other, link_node* i)
+	{
+
+	}
+
+	void splice(link_node* position, list& other, link_node* first, link_node* last)
+	{
+
+	}
+
+	// list specific algorithm
+	void unique()
+	{
+
+	}
+
+	void merge(list& other)
+	{
+
+	}
+
+	template<class Compare>
+	void merge(list& other, Compare comp)
+	{
+
+	}
+
+	void sort()
+	{
+
+	}
+
+	template<class Compare>
+	void sort(Compare comp)
+	{
+
+	}
+
+	void reverse()
+	{
+
+	}
+
+private:
+	void empty_init()
+	{
+
+	}
+
+	link_node* create_node(const T& val)
+	{
+		// create a node with element value
+
+	}
+
 private:
     link_node* _head;
 	link_node* _tail;
-	size_t _size;
 };
 
 } // namespace petty_stl
