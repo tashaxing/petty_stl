@@ -1,7 +1,7 @@
 #ifndef _LIST_H_
 #define _LIST_H_
 
-#include <memory>
+#include "../utility/allocator.hpp"
 
 namespace petty_stl
 {
@@ -42,10 +42,8 @@ public:
 	struct iterator
 	{
 	public:
-		iterator()
-		{
-
-		}
+		iterator(): _ptr(NULL)
+		{}
 
 		T& operator*() const
 		{
@@ -57,12 +55,51 @@ public:
 			return &(operator*());
 		}
 
-		iterator operator--(size_t)
+		// ++ prefix
+		iterator& operator++()
 		{
-			return NULL;
+			// shift to next link node
+			_ptr = _ptr->next;
+			return *this;
+		}
+
+		// ++ suffix
+		iterator operator++(int)
+		{
+			iterator tmp = *this;
+			++*this;
+			return tmp;
+		}
+
+		// -- prefix
+		iterator& operator--()
+		{
+			_ptr = _ptr->pre;
+			return *this;
+		}
+
+		// -- suffix
+		iterator operator--(int)
+		{
+			iterator tmp = *this;
+			--*this;
+			return tmp;
+		}
+
+		bool operator==(const iterator& other) const
+		{
+			return _ptr == other._ptr;
+		}
+
+		bool operator!=(const iterator& other) const
+		{
+			return _ptr != other._ptr;
 		}
 
 	protected:
+		iterator(link_node* ptr): _ptr(ptr)
+		{}
+
 		link_node* _ptr;
 	};
 
@@ -70,7 +107,7 @@ public:
 	// constructor and destructor related
 	list()
 	{
-
+		_head.
 	}
 
 	explicit list(size_t n, const T& val = T())
@@ -117,8 +154,11 @@ public:
 
 	size_t size() const
 	{
-		// TODO:
-		return 0; 
+		size_t len = 0;
+		for (link_node* p = _head; p != _tail; ++p)
+			++len;
+
+		return len; 
 	}
 
 	// operation
@@ -261,21 +301,41 @@ public:
 
 	}
 
+public:
+	template<typename T>
+	friend void swap(list<T>& l1, list<T>& l2)
+	{
+
+	}
+
+	template<typename T>
+	friend bool operator==(const list<T>& l1, const list<T>& l2)
+	{
+		return true;
+	}
+
+	template<typename T>
+	friend bool operator!=(const list<T>& l1, const list<T>& l2)
+	{
+		return true;
+	}
+
+
 private:
 	void empty_init()
 	{
 
 	}
 
-	link_node* create_node(const T& val)
+	link_node* create_node(const T& val = T())
 	{
 		// create a node with element value
-
+		
 	}
 
 private:
-    link_node* _head;
-	link_node* _tail;
+    link_node* _head; // dummy head node
+	link_node* _tail; // dummy tail node
 };
 
 } // namespace petty_stl
