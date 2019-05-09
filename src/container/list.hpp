@@ -107,20 +107,34 @@ public:
 	// constructor and destructor related
 	list()
 	{
-		_head.
+		_head = create_node(); // empty dummy node
+		_tail = head;
 	}
 
-	explicit list(size_t n, const T& val = T())
-	{}
+	list(size_t n, const T& val = T())
+	{
+		_head = create_node(); // empty dummy node
+		_tail = head;
+		while (n--)
+			push_back(val);
+	}
 
 	template <class InputIterator>
 	list(InputIterator first, InputIterator last)
 	{
-
+		_head = create_node(); // empty dummy node
+		_tail = head;
+		for (InputIterator iter = first; iter != last; ++iter)
+			push_back(*iter);
 	}
 
 	list(const list& other)
-	{}
+	{
+		_head = create_node(); // empty dummy node
+		_tail = head;
+		for (link_node* p = other._head; p != other._tail; p = p->next)
+			push_back(p->value);
+	}
 
 //	list(list&& other)
 //	{
@@ -129,7 +143,8 @@ public:
 
 	list& operator=(const list& other)
 	{
-
+		if (this != &other)
+			list(other).swap(*this);
 		return *this;
 	}
 
@@ -322,15 +337,20 @@ public:
 
 
 private:
-	void empty_init()
-	{
-
-	}
-
 	link_node* create_node(const T& val = T())
 	{
 		// create a node with element value
-		
+		link_node* node_ptr = petty_stl::allocator<link_node>::allocate();
+		petty_stl::allocator<link_node>::construct(node_ptr, val);
+		return node_ptr;
+	}
+
+	void delete_node(link_node* p)
+	{
+		p->pre = NULL;
+		p->next = NULL;
+		petty_stl::allocator<link_node>::destroy(p);
+		petty_stl::allocator<link_node>::deallocate(p);
 	}
 
 private:
