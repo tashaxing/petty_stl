@@ -10,23 +10,28 @@ int main(int argc, char* argv[])
 	std::cout << "welcome" << std::endl;
 
 	// ---- test vector ---- //
-	petty_stl::vector<int> vec;
-	vec.reserve(15);
-	std::cout << vec.size() << std::endl;
-	std::cout << vec.capacity() << std::endl;
+	//petty_stl::vector<int> vec;
+	//vec.reserve(15);
+	//std::cout << vec.size() << std::endl;
+	//std::cout << vec.capacity() << std::endl;
 
-	std::cout << (vec.empty() ? "empty" : "not empty") << std::endl;
-	
-	vec.push_back(2);
-	vec.push_back(3);
-	vec.push_back(4);
-	vec.push_back(7);
-	for (int i = 0; i < vec.size(); i++)
-		std::cout << vec[i] << ' ';
-	std::cout << std::endl;
+	//std::cout << (vec.empty() ? "empty" : "not empty") << std::endl;
+	//
+	//vec.push_back(2);
+	//vec.push_back(3);
+	//vec.push_back(4);
+	//vec.push_back(7);
+	//for (int i = 0; i < vec.size(); i++)
+	//	std::cout << vec[i] << ' ';
+	//std::cout << std::endl;
 
-	std::cout << vec.front() << std::endl;
-	std::cout << vec.back() << std::endl;
+	//std::cout << vec.front() << std::endl;
+	//std::cout << vec.back() << std::endl;
+
+	//petty_stl::vector<int> vec_copy(vec);
+	//for (int i = 0; i < vec_copy.size(); i++)
+	//	std::cout << vec_copy[i] << ' ';
+	//std::cout << std::endl;
 
 	//vec.pop_back();
 	//for (int i = 0; i < vec.size(); i++)
@@ -59,6 +64,7 @@ int main(int argc, char* argv[])
 	//std::cout << (vec.empty() ? "empty" : "not empty") << std::endl;
 
 	// ---- test list ---- //
+	petty_stl::list<int> my_list;
 
 	// ---- test queue ---- //
 

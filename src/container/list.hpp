@@ -45,6 +45,9 @@ public:
 		iterator(): _ptr(NULL)
 		{}
 
+		iterator(link_node* ptr) : _ptr(ptr)
+		{}
+
 		T& operator*() const
 		{
 			return _ptr->value;
@@ -95,10 +98,6 @@ public:
 		{
 			return _ptr != other._ptr;
 		}
-
-	protected:
-		iterator(link_node* ptr): _ptr(ptr)
-		{}
 
 		link_node* _ptr;
 	};
@@ -157,8 +156,19 @@ public:
 
 	~list()
 	{
-		clear();
+		link_node* p = _head;
+		while (p != _tail)
+		{
+			link_node* s = p;
+			p = p->next;
 
+			petty_stl::allocator<link_node>::destroy(s);
+			petty_stl::allocator<link_node>::deallocate(s);
+		}
+
+		// FIXME: free the dummy node
+		petty_stl::allocator<link_node>::destroy(p);
+		petty_stl::allocator<link_node>::deallocate(p);
 	}
 
 	// compare related
@@ -189,70 +199,133 @@ public:
 
 	void push_front(const T& val)
 	{
-
+		link_node* node_ptr = create_node(val);
+		_head->pre = node_ptr;
+		node_ptr->next = _head;
+		_head = node_ptr;
 	}
 
 	void pop_front()
 	{
-
+		link_node* node_ptr = _head;
+		_head = node_ptr->next;
+		_head->pre = NULL;
+		delete_node(node_ptr);
 	}
 
 	void push_back(const T& val)
 	{
-
+		// smart way to insert, also ok for empty list
+		link_node* node_ptr = create_node();
+		_tail->value = val;
+		_tail->next = node_ptr;
+		node_ptr->pre = _tail;
+		_tail = node_ptr;
 	}
 
 	void pop_back()
 	{
-
+		link_node* node_ptr = _tail->pre;
+		node_ptr->next = NULL;
+		delete_node(_tail);
+		_tail = node_ptr;
 	}
 
-	link_node* begin()
+	iterator begin()
 	{
-		return NULL;
+		return iterator(_head);
 	}
 
-	link_node* end()
+	iterator end()
 	{
-		return NULL;
+		return iterator(_tail);
 	}
 
-	const link_node* cbegin() const
+	const iterator cbegin() const
 	{
-		return NULL;
+		return iterator(_head);
 	}
 
-	const link_node* cend() const
+	const iterator cend() const
 	{
-		return NULL;
+		return iterator(_tail);
 	}
 
-	// rbegin, rend
+	// TODO: rbegin, rend
 
-	link_node* insert(link_node* position, const T& val)
+	iterator insert(iterator position, const T& val)
 	{
-		return NULL;
+		if (position == begin())
+		{
+			push_front(val);
+			return begin();
+		}
+		else if (position == end())
+		{
+			iterator iter = position;
+			push_back(val);
+			return iter;
+		}
+
+		link_node* node_ptr = create_node(val);
+		linke_node* pre_node_ptr = position._ptr->pre;
+		node_ptr->next = position._ptr;
+		node_ptr->pre = pre_node_ptr;
+		pre_node_ptr->next = node_ptr;
+		position._ptr->pre = node_ptr;
+
+		return iterator(node_ptr);
 	}
 
-	void insert(link_node* position, size_t n, const T& val)
+	void insert(iterator position, size_t n, const T& val)
 	{
-
+		while (n > 0)
+		{
+			position = insert(position, val);
+			--n;
+		}
 	}
 
 	template <class InputIterator>
-	void insert(link_node* position, InputIterator first, InputIterator last)
+	void insert(iterator position, InputIterator first, InputIterator last)
 	{
-
+		--last; // shift to the last enable element
+		while (last != first)
+		{
+			position = insert(position, *last);
+			--last;
+		}
+		insert(position, *last);
 	}
 
-	link_node* erase(link_node* position)
+	iterator erase(iterator position)
 	{
-		return NULL;
+		if (position == begin())
+		{
+			pop_front();
+			return begin();
+		}
+		else
+		{
+			link_node* pre_node_ptr = position._ptr->pre;
+			pre_node_ptr->next = position._ptr->next;
+			pre_node_ptr->next->pre = pre_node_ptr;
+			delete_node(position._ptr);
+			return iterator(pre_node_ptr->next);
+		}
 	}
 
-	link_node* erase(link_node* first, link_node* last)
+	iterator erase(iterator first, iterator last)
 	{
+		// make sure first != last
+		iterator ret;
+		for (iterator iter = first; iter != last; ++iter)
+		{
+			iterator temp_iter = iter;
+			ret = erase(temp_iter);
+		}
 
+		return ret;
 	}
 
 	void swap(list& other)
@@ -260,33 +333,52 @@ public:
 		// use std swap to do detail operation
 		std::swap(_head, other._head);
 		std::swap(_tail, other._tail);
-		std::swap(_size, other._size);
 	}
 
     void clear()
 	{
-		
+		erase(begin(), end());
 	}
 
 	void splice(link_node* position, list& other)
 	{
-
+		// TODO:
 	}
 
 	void splice(link_node* position, list& other, link_node* i)
 	{
-
+		// TODO:
 	}
 
 	void splice(link_node* position, list& other, link_node* first, link_node* last)
 	{
-
+		// TODO:
 	}
 
 	// list specific algorithm
 	void unique()
 	{
-
+		link_node* p = _head;
+		while (p != _tail)
+		{
+			link_node* next_node_ptr = p->next;
+			if (p->value == next_node_ptr->value)
+			{
+				if (next_node_ptr == _tail)
+				{
+					p->next = NULL;
+					_tail = p;
+				}
+				else
+				{
+					p->next = next_node_ptr->next;
+					next_node_ptr->next->pre = p;
+				}
+				delete_node(p);
+			}
+			else
+				p = p->next;
+		}
 	}
 
 	void merge(list& other)

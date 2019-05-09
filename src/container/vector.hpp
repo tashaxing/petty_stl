@@ -283,8 +283,8 @@ public:
 			reallocate_and_fill(position, n, val);
 	}
 
-	//template<class InputIterator>
-	void insert(T* position, T* first, T* last)
+	template<class InputIterator>
+	void insert(InputIterator position, InputIterator first, InputIterator last)
 	{
 		size_t spare_len = _terminate - _last;
 		size_t need_len = last - first;
@@ -361,11 +361,13 @@ private:
 		_terminate = new_terminate;
 	}
 
+	// actually this is a function template, use T* as InputIterator
 	template<class InputIterator>
 	void allocate_and_copy(InputIterator first, InputIterator last)
 	{
-		_first = petty_stl::allocator<T>::allocate(last - first);
-		_last = std::uninitialized_copy(_first, last, _first);
+		size_t n = (last - first) / sizeof(T);
+		_first = petty_stl::allocator<T>::allocate(n);
+		_last = std::uninitialized_copy(first, last, _first);
 		_terminate = _last; // FIXME: extra space?
 	}
 
