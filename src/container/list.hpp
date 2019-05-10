@@ -107,7 +107,7 @@ public:
 	list()
 	{
 		_head = create_node(); // empty dummy node
-		_tail = head;
+		_tail = _head;
 	}
 
 	list(size_t n, const T& val = T())
@@ -157,14 +157,14 @@ public:
 	~list()
 	{
 		link_node* p = _head;
-		while (p != _tail)
+		/*while (p != _tail)
 		{
 			link_node* s = p;
 			p = p->next;
 
 			petty_stl::allocator<link_node>::destroy(s);
 			petty_stl::allocator<link_node>::deallocate(s);
-		}
+		}*/
 
 		// FIXME: free the dummy node
 		petty_stl::allocator<link_node>::destroy(p);
@@ -172,7 +172,7 @@ public:
 	}
 
 	// compare related
-	bool emtpy() const
+	bool empty() const
 	{
 		return _head == _tail;
 	}
@@ -340,19 +340,25 @@ public:
 		erase(begin(), end());
 	}
 
-	void splice(link_node* position, list& other)
+	void splice(iterator position, list& other)
 	{
-		// TODO:
+		insert(position, other.begin(), other.end());
+		other._head = other._tail; // FIXME: for what?
 	}
 
-	void splice(link_node* position, list& other, link_node* i)
+	void splice(iterator position, list& other, iterator iter)
 	{
-		// TODO:
+		iterator next_iter = iter;
+		++next_iter;
+		splice(position, other, iter, next_iter);
 	}
 
-	void splice(link_node* position, list& other, link_node* first, link_node* last)
+	void splice(iterator position, list& other, iterator first, iterator last)
 	{
-		// TODO:
+		if (first == last)
+			return;
+
+		// TODO: 
 	}
 
 	// list specific algorithm
@@ -383,24 +389,60 @@ public:
 
 	void merge(list& other)
 	{
-
+		iterator iter1 = begin();
+		iterator iter2 = other.begin();
+		while (iter1 != end() && iter2 != other.end())
+		{
+			if (*iter1 <= *iter2)
+				++iter1
+			else
+			{
+				iterator iter = iter2;
+				++iter2;
+				splice(iter1, other, iter);
+			}
+		}
+		
+		if (iter1 == end())
+			splice(iter1, other, iter2, end());
 	}
 
 	template<class Compare>
 	void merge(list& other, Compare comp)
 	{
+		iterator iter1 = begin();
+		iterator iter2 = other.begin();
+		while (iter1 != end() && iter2 != other.end())
+		{
+			if (comp(*iter1, *iter2))
+				++iter1
+			else
+			{
+				iterator iter = iter2;
+				++iter2;
+				splice(iter1, other, iter);
+			}
+		}
 
+		if (iter1 == end())
+			splice(iter1, other, iter2, end());
 	}
 
 	void sort()
 	{
+		if (empty() || _head->next == _tail)
+			return;
 
+		// TODO:
 	}
 
 	template<class Compare>
 	void sort(Compare comp)
 	{
+		if (empty() || _head->next == _tail)
+			return;
 
+		// TODO:
 	}
 
 	void reverse()
@@ -446,7 +488,7 @@ private:
 	}
 
 private:
-    link_node* _head; // dummy head node
+    link_node* _head;
 	link_node* _tail; // dummy tail node
 };
 
