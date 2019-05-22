@@ -470,13 +470,25 @@ public:
 	template<typename T>
 	friend void swap(list<T>& l1, list<T>& l2)
 	{
-
+		std::swap(l1._head, l2._head);
+		std::swap(l1._tail, l2._tail);
 	}
 
 	template<typename T>
 	friend bool operator==(const list<T>& l1, const list<T>& l2)
 	{
-		return true;
+		link_node* node1 = l1._head;
+		link_node* node2 = l2._tail;
+		for (; node1 != l1._tail && node2 != l2._tail; node1 = node1->next, node2 = node2->next)
+		{
+			if (node1->value != node2->value)
+				break;
+		}
+
+		if (node1 == l1._tail && node2 == l2._tail)
+			return true;
+
+		return false;
 	}
 
 	template<typename T>
