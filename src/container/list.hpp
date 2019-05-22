@@ -28,14 +28,14 @@ private:
 //		link_node(link_node&&) = default;
 //		link_node& operator=(link_node&&) = default;
 
+		bool operator==(const link_node& other)
+		{
+			return value == other.value && pre == other.pre && next == other.next;
+		}
+
 		T value;
 		T* pre;
 		T* next;
-
-	private:
-		// disable some constructors
-		link_node(const link_node&);
-		link_node& operator=(const link_node&);	
 	};
 
 public:
@@ -447,7 +447,23 @@ public:
 
 	void reverse()
 	{
+		if (empty() || _head->next == _tail)
+			return;
 
+		link_node* cur_node = _head;
+		_head = _tail->pre;
+		_head->pre = NULL;
+
+		// insert from the tail as new list
+		do
+		{
+			link_node* next_node = cur_node->next;
+			cur_node->next = _head->next;
+			_head->next->pre = cur_node;
+			_head->next = cur_node;
+			cur_node->pre = _head;
+			cur_node = next_node;
+		} while (cur_node != _head)
 	}
 
 public:
@@ -475,7 +491,7 @@ private:
 	{
 		// create a node with element value
 		link_node* node_ptr = petty_stl::allocator<link_node>::allocate();
-		petty_stl::allocator<link_node>::construct(node_ptr, val);
+		petty_stl::allocator<link_node>::construct(node_ptr, link_node(val));
 		return node_ptr;
 	}
 
