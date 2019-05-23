@@ -65,6 +65,11 @@ int main(int argc, char* argv[])
 
 	// ---- test list ---- //
 	petty_stl::list<int> my_list;
+    my_list.push_back(1);
+    my_list.push_back(3);
+    my_list.push_back(7);
+
+    std::cout << my_list.size() << std::endl;
 
 	// ---- test queue ---- //
 

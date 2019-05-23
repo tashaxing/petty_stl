@@ -34,8 +34,8 @@ private:
 		}
 
 		T value;
-		T* pre;
-		T* next;
+        link_node* pre;
+        link_node* next;
 	};
 
 public:
