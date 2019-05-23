@@ -458,10 +458,24 @@ public:
 
 	void sort()
 	{
+		// skip size is 0 or 1
 		if (empty() || _head->next == _tail)
 			return;
 
-		// TODO:
+		// here use insert sort
+		list tmp;
+		iterator q = begin();
+		while (!empty())
+		{
+			iterator p = tmp.begin();
+			while (p != tmp.end() && *p < *q)
+				p++;
+			tmp.splice(p, q);
+			q = begin();
+		}
+
+		// assign tmp to list
+		swap(tmp);
 	}
 
 	template<class Compare>
