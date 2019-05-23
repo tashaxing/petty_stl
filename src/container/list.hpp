@@ -358,7 +358,35 @@ public:
 		if (first == last)
 			return;
 
-		// TODO: 
+		link_node* tail_node = last._ptr->pre;
+
+		// cut off the other list
+		if (other.begin() == first)
+		{
+			other._head = last._ptr;
+			other._head->pre = NULL;
+		}
+		else
+		{
+			first._ptr->pre->next = last._ptr;
+			last._ptr->pre = first._ptr->pre;
+		}
+
+		// do the list insert
+		if (position == begin())
+		{
+			first._ptr->pre = NULL;
+			tail_node->next = _head;
+			_head->pre = tail_node;
+			_head = first._ptr;
+		}
+		else
+		{
+			position._ptr->pre->next = first._ptr;
+			first._ptr->pre = position._ptr->pre;
+			tail_node->next = position._ptr;
+			position._ptr->pre = tail_node;
+		}
 	}
 
 	// list specific algorithm
@@ -494,7 +522,7 @@ public:
 	template<typename T>
 	friend bool operator!=(const list<T>& l1, const list<T>& l2)
 	{
-		return true;
+		return !(l1 == l2);
 	}
 
 
