@@ -66,10 +66,25 @@ int main(int argc, char* argv[])
 	// ---- test list ---- //
 	petty_stl::list<int> my_list;
     my_list.push_back(1);
-    my_list.push_back(3);
     my_list.push_back(7);
+    my_list.push_back(3);
+	my_list.push_back(5);
+	my_list.push_back(5);
+
+	my_list.insert(my_list.begin() + 2, 4);
+	//my_list.erase(my_list.end() - 2);
 
     std::cout << my_list.size() << std::endl;
+
+	my_list.sort();
+	my_list.unique();
+
+	std::cout << my_list.front() << std::endl;
+	std::cout << my_list.back() << std::endl;
+
+	for (petty_stl::list<int>::iterator it = my_list.begin(); it != my_list.end(); ++it)
+		std::cout << *it << ' ';
+	std::cout << std::endl;
 
 	// ---- test queue ---- //
 

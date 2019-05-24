@@ -89,6 +89,22 @@ public:
 			return tmp;
 		}
 
+		// shift right
+		iterator operator+(int n)
+		{
+			for (int i = 0; i < n; i++)
+				++*this;
+			return *this;
+		}
+
+		// shift left
+		iterator operator-(int n)
+		{
+			for (int i = 0; i < n; i++)
+				--*this;
+			return *this;
+		}
+
 		bool operator==(const iterator& other) const
 		{
 			return _ptr == other._ptr;
@@ -180,7 +196,7 @@ public:
 	size_t size() const
 	{
 		size_t len = 0;
-		for (link_node* p = _head; p != _tail; ++p)
+		for (link_node* p = _head; p != _tail; p = p->next)
 			++len;
 
 		return len; 
@@ -268,7 +284,7 @@ public:
 		}
 
 		link_node* node_ptr = create_node(val);
-		linke_node* pre_node_ptr = position._ptr->pre;
+		link_node* pre_node_ptr = position._ptr->pre;
 		node_ptr->next = position._ptr;
 		node_ptr->pre = pre_node_ptr;
 		pre_node_ptr->next = node_ptr;
@@ -408,10 +424,10 @@ public:
 					p->next = next_node_ptr->next;
 					next_node_ptr->next->pre = p;
 				}
-				delete_node(p);
+				delete_node(next_node_ptr);
 			}
 			else
-				p = p->next;
+				p = next_node_ptr;
 		}
 	}
 
@@ -470,7 +486,7 @@ public:
 			iterator p = tmp.begin();
 			while (p != tmp.end() && *p < *q)
 				p++;
-			tmp.splice(p, q);
+			tmp.splice(p, *this, q);
 			q = begin();
 		}
 
@@ -484,7 +500,24 @@ public:
 		if (empty() || _head->next == _tail)
 			return;
 
-		// TODO:
+		// skip size is 0 or 1
+		if (empty() || _head->next == _tail)
+			return;
+
+		// here use insert sort
+		list tmp;
+		iterator q = begin();
+		while (!empty())
+		{
+			iterator p = tmp.begin();
+			while (p != tmp.end() && comp(*p, *q))
+				p++;
+			tmp.splice(p, q);
+			q = begin();
+		}
+
+		// assign tmp to list
+		swap(tmp);
 	}
 
 	void reverse()
