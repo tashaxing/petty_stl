@@ -129,7 +129,7 @@ public:
 	list(size_t n, const T& val = T())
 	{
 		_head = create_node(); // empty dummy node
-		_tail = head;
+        _tail = _head;
 		while (n--)
 			push_back(val);
 	}
@@ -138,7 +138,7 @@ public:
 	list(InputIterator first, InputIterator last)
 	{
 		_head = create_node(); // empty dummy node
-		_tail = head;
+        _tail = _head;
 		for (InputIterator iter = first; iter != last; ++iter)
 			push_back(*iter);
 	}
@@ -146,7 +146,7 @@ public:
 	list(const list& other)
 	{
 		_head = create_node(); // empty dummy node
-		_tail = head;
+        _tail = _head;
 		for (link_node* p = other._head; p != other._tail; p = p->next)
 			push_back(p->value);
 	}
@@ -438,7 +438,7 @@ public:
 		while (iter1 != end() && iter2 != other.end())
 		{
 			if (*iter1 <= *iter2)
-				++iter1
+                ++iter1;
 			else
 			{
 				iterator iter = iter2;
@@ -459,7 +459,7 @@ public:
 		while (iter1 != end() && iter2 != other.end())
 		{
 			if (comp(*iter1, *iter2))
-				++iter1
+                ++iter1;
 			else
 			{
 				iterator iter = iter2;
@@ -538,18 +538,18 @@ public:
 			_head->next = cur_node;
 			cur_node->pre = _head;
 			cur_node = next_node;
-		} while (cur_node != _head)
+        } while (cur_node != _head);
 	}
 
 public:
-	template<typename T>
+//	template<typename T>
 	friend void swap(list<T>& l1, list<T>& l2)
 	{
 		std::swap(l1._head, l2._head);
 		std::swap(l1._tail, l2._tail);
 	}
 
-	template<typename T>
+//	template<typename T>
 	friend bool operator==(const list<T>& l1, const list<T>& l2)
 	{
 		link_node* node1 = l1._head;
@@ -566,7 +566,7 @@ public:
 		return false;
 	}
 
-	template<typename T>
+//	template<typename T>
 	friend bool operator!=(const list<T>& l1, const list<T>& l2)
 	{
 		return !(l1 == l2);

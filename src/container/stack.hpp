@@ -42,24 +42,24 @@ public:
 
 	void swap(stack& other)
 	{
-		std::swap(_container, other._container);
+        std::swap(_container, other._container);
 	}
 
 public:
 	// operator
-	template<typename T, class Container>
+//	template<typename T, class Container>
 	friend bool operator==(const stack<T, Container>& lhs, const stack<T, Container>& rhs)
 	{
 		return lhs._container == rhs._container;
 	}
 
-	template<typename T, class Container>
+//	template<typename T, class Container>
 	friend bool operator!=(const stack<T, Container>& lhs, const stack<T, Container>& rhs)
 	{
 		return lhs._container != rhs._container;
 	}
 
-	template<typename T, class Container>
+//	template<typename T, class Container>
 	void swap(stack<T, Container>& x, stack<T, Container>& y)
 	{
 		x.swap(y);
