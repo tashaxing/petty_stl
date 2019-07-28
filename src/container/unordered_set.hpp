@@ -62,6 +62,11 @@ public:
 
 	}
 
+    iterator insert(const T& key)
+    {
+
+    }
+
 	template<class InputIterator>
 	void insert(InputIterator first, InputIterator last)
 	{
@@ -77,6 +82,11 @@ public:
 	{
 
 	}
+
+    void clear()
+    {
+
+    }
 
 public:
 	//friend void swap()
